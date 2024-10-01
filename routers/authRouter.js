@@ -7,10 +7,9 @@ const {
 const isAuth = require("../middlewares/isAuthMiddleware");
 const authRouter = express.Router();
 
-authRouter.post("/register", registerController);
-authRouter.post("/login", loginController);
-authRouter.post('/logout',isAuth,logoutController);
+authRouter
+  .post("/register", registerController)
+  .post("/login", loginController)
+  .post("/logout", isAuth, logoutController);
 
 module.exports = authRouter;
-
-
