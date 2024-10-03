@@ -8,6 +8,7 @@ const mongodbSession= require('connect-mongodb-session')(session)
 const db = require('./db');
 const authRouter = require('./routers/authRouter');
 const blogRouter = require("./routers/blogRouter");
+const isAuth = require("./middlewares/isAuthMiddleware");
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -25,7 +26,7 @@ app.use(session({
   saveUninitialized:false,
 }))
 app.use('/auth',authRouter);
-app.use('/blog',blogRouter)
+app.use('/blog',isAuth, blogRouter)
 
 
 app.listen(PORT, () => {

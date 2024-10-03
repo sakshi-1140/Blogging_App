@@ -55,4 +55,54 @@ const getMyBlogs = ({ SKIP, userId }) => {
   });
 };
 
-module.exports = { createBlog, getAllBlogs, getMyBlogs };
+const getBlogWithId = ({ blogId }) => {
+  return new Promise(async (resolve, reject) => {
+    if (!blogId) return reject("Missing BlogId");
+    try {
+      const blogDb = await blogSchema.findOne({ _id: blogId });
+
+      if (!blogDb) return reject(`Blog not found with BlogId : ${blogId}`);
+
+      resolve(blogDb);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+const editBlogWithId = ({ blogId, title, textBody }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const blogDb = await blogSchema.findOneAndUpdate(
+        { _id: blogId },
+        { title, textBody },
+        { new: true }
+      );
+      resolve(blogDb);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+const deleteBlogWithId = ({ blogId }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const blogDb = await blogSchema.findOneAndDelete({ _id: blogId });
+      resolve(blogDb);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+
+
+module.exports = {
+  createBlog,
+  getAllBlogs,
+  getMyBlogs,
+  getBlogWithId,
+  editBlogWithId,
+  deleteBlogWithId,
+};
