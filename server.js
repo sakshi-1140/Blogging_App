@@ -9,6 +9,7 @@ const db = require('./db');
 const authRouter = require('./routers/authRouter');
 const blogRouter = require("./routers/blogRouter");
 const isAuth = require("./middlewares/isAuthMiddleware");
+const followRouter = require("./routers/followRouter");
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -27,7 +28,7 @@ app.use(session({
 }))
 app.use('/auth',authRouter);
 app.use('/blog',isAuth, blogRouter)
-
+app.use('/follow',isAuth,followRouter)
 
 app.listen(PORT, () => {
   console.log(clc.yellow(`Server is runnning at: `));

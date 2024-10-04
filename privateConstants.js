@@ -1,3 +1,3 @@
 module.exports =Object.freeze({
-    LIMIT:5,
+    LIMIT:7,
 })
