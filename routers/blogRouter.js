@@ -5,16 +5,16 @@ const {
   getMyBlogsController,
   editBlogController,
   deleteBlogController,
- 
 } = require("../controllers/blogController");
+const rateLimiting = require("../middlewares/rateLimiting");
 
 const blogRouter = express.Router();
 
 blogRouter
-  .post("/create-blog", createBlogController)
-  .get("/get-blogs",  getBlogsController)
-  .get("/get-myblogs",  getMyBlogsController)
-  .post("/edit-blog",  editBlogController)
-  .post("/delete-blog",  deleteBlogController);
+  .post("/create-blog", rateLimiting, createBlogController)
+  .get("/get-blogs", getBlogsController)
+  .get("/get-myblogs", getMyBlogsController)
+  .post("/edit-blog", editBlogController)
+  .post("/delete-blog", deleteBlogController);
 
-  module.exports = blogRouter;
+module.exports = blogRouter;

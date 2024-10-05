@@ -24,8 +24,8 @@ const createBlog = ({ title, textBody, userId }) => {
 const getAllBlogs = ({ SKIP }) => {
   return new Promise(async (resolve, reject) => {
     try {
-      //sort skip limit
       const blogDb = await blogSchema.aggregate([
+        { $match: { isDeleted: { $ne: true } } },
         { $sort: { creationDateTime: -1 } }, //DESC order
         { $skip: SKIP },
         { $limit: LIMIT },
@@ -42,14 +42,14 @@ const getMyBlogs = ({ SKIP, userId }) => {
     try {
       //match sort ,skip,limit
       const myBlogDb = await blogSchema.aggregate([
-        { $match: { userId: userId } },
+        { $match: { userId: userId, isDeleted: { $ne: true } } },
         { $sort: { creationDateTime: -1 } },
         { $skip: SKIP },
         { $limit: LIMIT },
       ]);
       resolve(myBlogDb);
     } catch (error) {
-      console.log("lineBC52", error);
+      console.log("lineBC55", error);
       reject(error);
     }
   });
@@ -88,15 +88,17 @@ const editBlogWithId = ({ blogId, title, textBody }) => {
 const deleteBlogWithId = ({ blogId }) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const blogDb = await blogSchema.findOneAndDelete({ _id: blogId });
+      //const blogDb = await blogSchema.findOneAndDelete({ _id: blogId });
+      const blogDb = await blogSchema.findOneAndUpdate(
+        { _id: blogId },
+        { isDeleted: true, deletionDateTime: Date.now() }
+      );
       resolve(blogDb);
     } catch (error) {
       reject(error);
     }
   });
 };
-
-
 
 module.exports = {
   createBlog,

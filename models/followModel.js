@@ -66,6 +66,36 @@ const getFollowingList = ({ followerUserId, SKIP }) => {
   });
 };
 
+const getFollowerList = ({ followingUserId, SKIP }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const followerListDb = await followSchema.aggregate([
+        { $match: { followingUserId } },
+        { $sort: { creationDateTime: -1 } },
+        { $skip: SKIP },
+        { $limit: LIMIT },
+      ]);
+
+      const followerUserIdsList = followerListDb.map(
+        (follow) => follow.followerUserId
+      );
+
+      const followerUserDetails = await userSchema.find({
+        _id: { $in: followerUserIdsList },
+      });
+
+    //  console.log("lineFM87", followerListDb);
+    //  console.log("lineFM88", followerUserIdsList);
+    //  console.log("lineFM89", followerUserDetails);
+
+      resolve(followerUserDetails.reverse());
+    } catch (error) {
+      console.log("lineFM93", error);
+      reject(error);
+    }
+  });
+};
+
 const unfollowUser = ({ followerUserId, followingUserId }) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -73,11 +103,16 @@ const unfollowUser = ({ followerUserId, followingUserId }) => {
         followerUserId,
         followingUserId,
       });
-      resolve(followDb)
+      resolve(followDb);
     } catch (error) {
-        reject(error);
+      reject(error);
     }
   });
 };
 
-module.exports = { followUser, getFollowingList, unfollowUser };
+module.exports = {
+  followUser,
+  getFollowingList,
+  unfollowUser,
+  getFollowerList,
+};

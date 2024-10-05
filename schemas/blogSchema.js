@@ -25,6 +25,14 @@ const blogSchema = new Schema({
         required:true,
         ref:"user", // foreign key to user Schema
     },
+    isDeleted:{
+        type:Boolean,
+        default:false,
+    },
+    deletionDateTime:{
+        type:String,
+    }
+
 })
 
 

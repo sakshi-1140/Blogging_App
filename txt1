@@ -1,10 +1,5 @@
-/*
-DAy -6
-
-
-
-
-
-
-
+# TODOS -
+TASk - 1 -.trim in create and edit blog controller and remove from utils   
+TASk - 2 - if(followUSerId===followingUserId) - inFollowUserController return res.send({status:400})
+TASk - 3 - pagination - sorting order - is incorrect ; figure out solutions
 

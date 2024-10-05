@@ -2,6 +2,7 @@ const {
   followUser,
   getFollowingList,
   unfollowUser,
+  getFollowerList,
 } = require("../models/followModel");
 const User = require("../models/userModel");
 
@@ -40,6 +41,7 @@ const followUserController = async (req, res) => {
   }
 };
 
+
 const getFollowingListController = async (req, res) => {
   const followerUserId = req.session.user.userId;
   const SKIP = Number(req.query.skip) || 0;
@@ -48,6 +50,14 @@ const getFollowingListController = async (req, res) => {
 
   try {
     const followingListDb = await getFollowingList({ followerUserId, SKIP });
+    
+    if(followingListDb.length===0){
+      return res.send({
+        status:204,
+        message:"No following found",
+      });
+    }
+    
     return res.send({
       status: 200,
       message: "Read success",
@@ -55,6 +65,37 @@ const getFollowingListController = async (req, res) => {
     });
   } catch (error) {
     console.log("lineFC53", error);
+    return res.send({
+      status: 500,
+      message: "Internal server error",
+      error: error,
+    });
+  }
+};
+
+const getFollowerListController = async (req, res) => {
+  const followingUserId = req.session.user.userId;
+  const SKIP = Number(req.query.skip) || 0;
+
+  // console.log("lineFC79",followingUserId,SKIP)
+
+  try {
+    const followerListDb = await getFollowerList({ followingUserId, SKIP });
+    
+    if(followerListDb.length===0){
+      return res.send({
+        status:204,
+        message:"No follower's found",
+      });
+    }
+    
+    return res.send({
+      status: 200,
+      message: "Read success",
+      data: followerListDb,
+    });
+  } catch (error) {
+    console.log("lineFC98", error);
     return res.send({
       status: 500,
       message: "Internal server error",
@@ -91,4 +132,5 @@ module.exports = {
   followUserController,
   getFollowingListController,
   unfollowController,
+  getFollowerListController,
 };
